@@ -13,7 +13,7 @@ jobs:
   release:
     name: Build Image
     runs-on: ubuntu-latest
-    environment: ${{ env.ENVIRONMENT_NAME }}
+    environment: staging
 
     steps:
     - uses: actions/checkout@v2
