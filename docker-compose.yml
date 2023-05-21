@@ -1,0 +1,40 @@
+version: "3.9"
+services:
+  web:
+    build: .
+    ports:
+      - "8080:5000"
+    volumes:
+      - .:/app
+    links:
+      - db
+    networks:
+      - default
+  db:
+    image: mysql
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_DATABASE: mentor_mentee_matching_system
+      MYSQL_USER: damien_dev
+      MYSQL_PASSWORD: devpass
+      MYSQL_ROOT_PASSWORD: devpass
+    volumes:
+      - persistent:/var/lib/mysql
+    networks:
+      - default
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    links:
+      - db:db
+    ports:
+      - "8000:80"
+    environment:
+      MYSQL_USER: damien_dev
+      MYSQL_PASSWORD: devpass
+      MYSQL_ROOT_PASSWORD: devpass
+volumes:
+  persistent:
+
+
+

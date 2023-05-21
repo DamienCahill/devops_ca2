@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+  {% block body %}
+  <div class="container-fluid bg-light mt-5 mb-5">
+    <div class="row justify-content-center align-items-center" style="height: 100vh;">
+      <div class="col-md-8">
+        <div class="card shadow">
+          <div class="card-body">
+            <h2> Questionnaire Submissions </h2>
+            {% with messages = get_flashed_messages(with_categories=true) %}
+              {% if messages %}
+                {% for category, message in messages %}
+                  <div class="alert alert-{{ category }}">{{ message }}</div>
+                {% endfor %}
+              {% endif %}
+            {% endwith %}
+            <div id="submissions-table-element" data-api-url="{{url_for('dashboard_controller_bp.load_dashboard', _external=True)}}questionnaires/get-all-submissions"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script src="{{url_for('dashboard_controller_bp.load_dashboard', _external=True)}}/static/preact_components/dist/bundle.js"></script>
+  {% endblock %}

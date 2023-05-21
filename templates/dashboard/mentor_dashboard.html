@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+  {% block body %}
+  <div class="container mt-5 mb-5">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="alert alert-{{ category }}">{{ message }}</div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+      <div class="row">
+        <div class="col-md-4 mb-4">
+          <a href="matches/proposed/{{session.userid}}" class="text-dark">
+            <div class="card h-100">
+              <div class="card-body text-center">
+                <i class="fas fa-handshake fa-5x mb-4"></i>
+                <h5 class="card-title">View Proposed Matches</h5>
+              </div>
+            </div>
+          </a>
+        </div>
+        <div class="col-md-4 mb-4">
+          <a href="matches/{{session.userid}}" class="text-dark">
+            <div class="card h-100">
+              <div class="card-body text-center">
+                <i class="fas fa-check-circle fa-5x mb-4"></i>
+                <h5 class="card-title">View Accepted Matches</h5>
+              </div>
+            </div>
+          </a>
+        </div>
+        <div class="col-md-4 mb-4">
+          <a href="/profile" class="text-dark">
+            <div class="card h-100">
+              <div class="card-body text-center">
+                <i class="fas fa-pencil-alt fa-5x mb-4"></i>
+                <h5 class="card-title">Edit My Profile</h5>
+              </div>
+            </div>
+          </a>
+        </div>
+      </div>
+    </div>
+  {% endblock %}

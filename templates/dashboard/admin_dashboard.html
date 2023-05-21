@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+  {% block body %}
+  <div class="container mt-5 mb-5">
+  	{% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="alert alert-{{ category }}">{{ message }}</div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+      <div class="row">
+        <div class="col-md-4 mb-4">
+          <a href="/admins" class="text-dark">
+            <div class="card h-100">
+              <div class="card-body text-center">
+                <i class="fas fa-users fa-5x mb-4"></i>
+                <h5 class="card-title">Manage Admins</h5>
+              </div>
+            </div>
+          </a>
+        </div>
+        <div class="col-md-4 mb-4">
+          <a href="/mentors" class="text-dark">
+            <div class="card h-100">
+              <div class="card-body text-center">
+                <i class="fas fa-chalkboard-teacher fa-5x mb-4"></i>
+                <h5 class="card-title">Manage Mentors</h5>
+              </div>
+            </div>
+          </a>
+        </div>
+        <div class="col-md-4 mb-4">
+          <a href="/questionnaires/submissions" class="text-dark">
+            <div class="card h-100">
+              <div class="card-body text-center">
+                <i class="fas fa-file-alt fa-5x mb-4"></i>
+                <h5 class="card-title">View Questionnaire Submissions</h5>
+              </div>
+            </div>
+          </a>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-4 mb-4">
+          <a href="/mentors/matches" class="text-dark">
+            <div class="card h-100">
+              <div class="card-body text-center">
+                <i class="fas fa-handshake fa-5x mb-4"></i>
+                <h5 class="card-title">View Mentor/Mentee Matches</h5>
+              </div>
+            </div>
+          </a>
+        </div>
+      </div>
+    </div>
+  {% endblock %}
