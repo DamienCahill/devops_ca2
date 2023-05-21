@@ -1,6 +1,8 @@
 name: CI/CD Pipeline
 
 on: [push]
+env:  
+  ENV_NAME: ${{ github.ref == 'refs/heads/master' && 'production' || github.ref == 'refs/heads/staging' && 'staging' || 'unknown' }}
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
@@ -8,11 +10,12 @@ jobs:
     - uses: actions/checkout@v3
     - run: pip install -r requirements.txt
     - run: pytest ./tests
-  release:
+  deploy:
     name: Build Image
     runs-on: ubuntu-latest
-    environment: production
-
+    environment: ${{ github.ref == 'refs/heads/master' && 'production' || github.ref == 'refs/heads/staging' && 'staging' || 'unknown' }}
+    needs: build-and-test
+    if: ${{ !github.event.pull_request && (github.ref == 'refs/heads/staging' || github.ref == 'refs/heads/master') }}
     steps:
     - uses: actions/checkout@v2
 
@@ -55,3 +58,11 @@ jobs:
         service: ${{ vars.ECS_SERVICE }}
         cluster: ${{ vars.ECS_CLUSTER }}
         wait-for-service-stability: true
+    - name: Send Teams Alert
+      uses: freezer00/teams-webhook-action@v1.0.0
+      with:
+        webhook_url: ${{secrets.TEAMS_WEBHOOK}}
+        title: ${{ env.ENV_NAME }} has been built and deployed successfully.
+        needs: ${{ toJson(needs) }}
+        job: ${{ toJson(job) }}
+        dry_run: false
