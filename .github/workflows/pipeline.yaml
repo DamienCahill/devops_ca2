@@ -1,12 +1,6 @@
 name: CI/CD Pipeline
 
 on: [push]
-env:
-  CONTAINER_NAME: mentor-mentee-matching-system-container-prod
-  ECR_REPO: mentor-mentee-matching-system-web
-  ECS_CLUSTER: mentor-mentee-matching-system-cluster-prod
-  ECS_SERVICE: mentor-mentee-matching-system-service1-prod
-  ECS_TASK_DEFINITION_NAME: mentor-mentee-matching-system-task-prod
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
@@ -17,6 +11,7 @@ jobs:
   release:
     name: Build Image
     runs-on: ubuntu-latest
+    environment: production
     steps:
     - uses: actions/checkout@v2
 
@@ -35,7 +30,7 @@ jobs:
       id: build-tag-push-image
       env:
         ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-        ECR_REPOSITORY: ${{ env.ECR_REPO }}
+        ECR_REPOSITORY: $ECR_REPO
         IMAGE_TAG: latest
       run: |
         docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
@@ -43,19 +38,19 @@ jobs:
         echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
     - name: Download task definition
       run: |
-        aws ecs describe-task-definition --task-definition ${{ env.ECS_TASK_DEFINITION_NAME }} --query taskDefinition > task-definition.json
+        aws ecs describe-task-definition --task-definition $ECS_TASK_DEFINITION_NAME --query taskDefinition > task-definition.json
     - name: Update the image in the ECS task definition
       id: update-task-definition
       uses: aws-actions/amazon-ecs-render-task-definition@v1
       with:
         task-definition: task-definition.json
-        container-name: ${{ env.CONTAINER_NAME }}
+        container-name: $CONTAINER_NAME
         image: ${{ steps.build-tag-push-image.outputs.image }}
 
     - name: Deploy Amazon ECS task definition
       uses: aws-actions/amazon-ecs-deploy-task-definition@v1
       with:
         task-definition: ${{ steps.update-task-definition.outputs.task-definition }}
-        service: ${{ env.ECS_SERVICE }}
-        cluster: ${{ env.ECS_CLUSTER }}
+        service: $ECS_SERVICE
+        cluster: $ECS_CLUSTER
         wait-for-service-stability: true
