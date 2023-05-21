@@ -30,7 +30,7 @@ jobs:
       id: build-tag-push-image
       env:
         ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-        ECR_REPOSITORY: ${{ env.ECR_REPO }}
+        ECR_REPOSITORY: ${{ secrets.ECR_REPO }}
         IMAGE_TAG: latest
       run: |
         docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
@@ -43,7 +43,7 @@ jobs:
       id: update-task-definition
       uses: aws-actions/amazon-ecs-render-task-definition@v1
       with:
-        task-definition: task-definition.json
+        task-definition: task-definition.jsony
         container-name: ${{ env.CONTAINER_NAME }}
         image: ${{ steps.build-tag-push-image.outputs.image }}
 
