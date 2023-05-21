@@ -10,6 +10,13 @@ jobs:
     - uses: actions/checkout@v3
     - run: pip install -r requirements.txt
     - run: pytest ./tests
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - run: pip install -r requirements.txt
+    - run: pip install pylint
+    - run: pylint --variable-rgx="[a-z0-9_]{1,30}$" --ignore-paths="^tests/.*$" $(git ls-files '*.py')
   deploy:
     name: Build, Release and Deploy Image
     runs-on: ubuntu-latest
