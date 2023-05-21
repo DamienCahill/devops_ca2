@@ -1,7 +1,12 @@
 name: CI/CD Pipeline
 
 on: [push]
-
+env:
+  CONTAINER_NAME: mentor-mentee-matching-system-prod
+  ECR_REPO: mentor-mentee-matching-system-web
+  ECS_CLUSTER: mentor-mentee-matching-system-prod
+  ECS_SERVICE: mentor-mentee-matching-system-prod
+  ECS_TASK_DEFINITION_NAME: mentor-mentee-matching-system-prod
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
@@ -30,7 +35,7 @@ jobs:
       id: build-tag-push-image
       env:
         ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-        ECR_REPOSITORY: ${{ secrets.ECR_REPO }}
+        ECR_REPOSITORY: ${{ env.ECR_REPO }}
         IMAGE_TAG: latest
       run: |
         docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
