@@ -2,11 +2,11 @@ name: CI/CD Pipeline
 
 on: [push]
 env:
-  CONTAINER_NAME: mentor-mentee-matching-system-prod
+  CONTAINER_NAME: mentor-mentee-matching-system-container-prod
   ECR_REPO: mentor-mentee-matching-system-web
-  ECS_CLUSTER: mentor-mentee-matching-system-prod
-  ECS_SERVICE: mentor-mentee-matching-system-prod
-  ECS_TASK_DEFINITION_NAME: mentor-mentee-matching-system-prod
+  ECS_CLUSTER: mentor-mentee-matching-system-cluster-prod
+  ECS_SERVICE: mentor-mentee-matching-system-service1-prod
+  ECS_TASK_DEFINITION_NAME: mentor-mentee-matching-system-task-prod
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
