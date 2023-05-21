@@ -1,6 +1,8 @@
 name: CI/CD Pipeline
 
 on: [push]
+env:  
+  ENVIRONMENT_NAME: ${{ github.ref == 'refs/heads/master' && 'production' || github.ref == 'refs/heads/staging' && 'staging' || 'unknown' }}
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
@@ -11,7 +13,7 @@ jobs:
   release:
     name: Build Image
     runs-on: ubuntu-latest
-    environment: staging
+    environment: ${{ env.ENVIRONMENT_NAME }}
 
     steps:
     - uses: actions/checkout@v2
@@ -55,3 +57,16 @@ jobs:
         service: ${{ vars.ECS_SERVICE }}
         cluster: ${{ vars.ECS_CLUSTER }}
         wait-for-service-stability: true
+    - uses: freezer00/teams-webhook-action@v1.0.0
+        with:
+          webhook_url: ${{secrets.TEAMS_WEBHOOK}}
+          needs: ${{ toJson(needs) }}
+          job: ${{ toJson(job) }}
+          title: Custom title
+          additional_button_title: |-
+            Link to Google
+            Link to Microsoft
+          additional_button_url: |-
+            https://google.com
+            https://www.microsoft.com/de-de/microsoft-teams
+          dry_run: false
