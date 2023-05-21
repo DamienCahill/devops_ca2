@@ -12,6 +12,7 @@ jobs:
     name: Build Image
     runs-on: ubuntu-latest
     environment: production
+
     steps:
     - uses: actions/checkout@v2
 
@@ -30,7 +31,7 @@ jobs:
       id: build-tag-push-image
       env:
         ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-        ECR_REPOSITORY: $ECR_REPO
+        ECR_REPOSITORY: ${{ vars.ECR_REPO }}
         IMAGE_TAG: latest
       run: |
         docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
@@ -38,19 +39,19 @@ jobs:
         echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
     - name: Download task definition
       run: |
-        aws ecs describe-task-definition --task-definition $ECS_TASK_DEFINITION_NAME --query taskDefinition > task-definition.json
+        aws ecs describe-task-definition --task-definition ${{ vars.ECS_TASK_DEFINITION_NAME }} --query taskDefinition > task-definition.json
     - name: Update the image in the ECS task definition
       id: update-task-definition
       uses: aws-actions/amazon-ecs-render-task-definition@v1
       with:
         task-definition: task-definition.json
-        container-name: $CONTAINER_NAME
+        container-name: ${{ vars.CONTAINER_NAME }}
         image: ${{ steps.build-tag-push-image.outputs.image }}
 
     - name: Deploy Amazon ECS task definition
       uses: aws-actions/amazon-ecs-deploy-task-definition@v1
       with:
         task-definition: ${{ steps.update-task-definition.outputs.task-definition }}
-        service: $ECS_SERVICE
-        cluster: $ECS_CLUSTER
+        service: ${{ vars.ECS_SERVICE }}
+        cluster: ${{ vars.ECS_CLUSTER }}
         wait-for-service-stability: true
