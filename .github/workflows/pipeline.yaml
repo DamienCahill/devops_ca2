@@ -61,6 +61,7 @@ jobs:
       uses: freezer00/teams-webhook-action@v1.0.0
       with:
         webhook_url: ${{secrets.TEAMS_WEBHOOK}}
+        title: ${{ env.ENVIRONMENT_NAME }} has been released and deployed successfully.
         needs: ${{ toJson(needs) }}
         job: ${{ toJson(job) }}
         dry_run: false
