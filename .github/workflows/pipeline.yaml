@@ -2,7 +2,7 @@ name: CI/CD Pipeline
 
 on: [push]
 env:  
-  ENVIRONMENT_NAME: ${{ github.ref == 'refs/heads/master' && 'production' || github.ref == 'refs/heads/staging' && 'staging' || 'unknown' }}
+  ENV_NAME: ${{ github.ref == 'refs/heads/master' && 'production' || github.ref == 'refs/heads/staging' && 'staging' || 'unknown' }}
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
@@ -13,7 +13,7 @@ jobs:
   release:
     name: Build Image
     runs-on: ubuntu-latest
-    environment: ${{ env.ENVIRONMENT_NAME }}
+    environment: ${{ env.ENV_NAME }}
 
     steps:
     - uses: actions/checkout@v2
@@ -61,7 +61,7 @@ jobs:
       uses: freezer00/teams-webhook-action@v1.0.0
       with:
         webhook_url: ${{secrets.TEAMS_WEBHOOK}}
-        title: ${{ env.ENVIRONMENT_NAME }} has been built and deployed successfully.
+        title: ${{ env.ENV_NAME }} has been built and deployed successfully.
         needs: ${{ toJson(needs) }}
         job: ${{ toJson(job) }}
         dry_run: false
