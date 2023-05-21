@@ -59,8 +59,8 @@ jobs:
         wait-for-service-stability: true
     - name: Send Teams Alert
       uses: freezer00/teams-webhook-action@v1.0.0
-        with:
-          webhook_url: ${{secrets.TEAMS_WEBHOOK}}
-          needs: ${{ toJson(needs) }}
-          job: ${{ toJson(job) }}
-          dry_run: false
+      with:
+        webhook_url: ${{secrets.TEAMS_WEBHOOK}}
+        needs: ${{ toJson(needs) }}
+        job: ${{ toJson(job) }}
+        dry_run: false
