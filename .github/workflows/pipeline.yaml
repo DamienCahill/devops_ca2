@@ -13,7 +13,7 @@ jobs:
   release:
     name: Build Image
     runs-on: ubuntu-latest
-    environment: staging
+    environment: ${{ env.ENVIRONMENT_NAME }}
 
     steps:
     - uses: actions/checkout@v2
@@ -61,7 +61,7 @@ jobs:
       uses: freezer00/teams-webhook-action@v1.0.0
       with:
         webhook_url: ${{secrets.TEAMS_WEBHOOK}}
-        title: ${{ env.ENVIRONMENT_NAME }} has been released and deployed successfully.
+        title: ${{ env.ENVIRONMENT_NAME }} has been built and deployed successfully.
         needs: ${{ toJson(needs) }}
         job: ${{ toJson(job) }}
         dry_run: false
