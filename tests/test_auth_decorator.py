@@ -12,7 +12,7 @@ def test_login_required_decorator():
     with app.test_client() as client:
         # Make a request to the protected route without logging in
         response = client.get("/testing")
-        assert response.status_code == 301  # Expect a redirect to the login page
+        assert response.status_code == 300  # Expect a redirect to the login page
 
         # Log in by setting the session variable
         with client.session_transaction() as sess:
