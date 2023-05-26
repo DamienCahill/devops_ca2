@@ -10,6 +10,14 @@ jobs:
     - uses: actions/checkout@v3
     - run: pip install -r requirements.txt
     - run: pytest ./tests
+    - name: Send Teams Alert
+      if: ${{ failure() }}
+      uses: freezer00/teams-webhook-action@v1.0.0
+      with:
+        webhook_url: ${{ secrets.TEAMS_WEBHOOK }}
+        title: Build and test failed on branch ${{ github.ref }}
+        job: ${{ toJson(job) }}
+        dry_run: false
   lint:
     runs-on: ubuntu-latest
     steps:
