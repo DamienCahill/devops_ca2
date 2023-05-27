@@ -74,9 +74,9 @@ jobs:
         cluster: ${{ vars.ECS_CLUSTER }}
         wait-for-service-stability: true
     - name: Send Teams Alert Success
+      if: ${{ success() }}
       uses: freezer00/teams-webhook-action@v1.0.0
       with:
-        if: ${{ success() }}
         webhook_url: ${{secrets.TEAMS_WEBHOOK}}
         title: ${{ env.ENV_NAME }} has been built and deployed successfully.
         needs: ${{ toJson(needs) }}
